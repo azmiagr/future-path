@@ -9,3 +9,8 @@ type GetBerita struct {
 	Judul_Berita string `json:"judul_berita"`
 	Isi_Berita   string `json:"isi_berita"`
 }
+
+type UpdateBerita struct {
+	Judul_Berita string `json:"judul_berita"`
+	Isi_Berita   string `json:"isi_berita"`
+}

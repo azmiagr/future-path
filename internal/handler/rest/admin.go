@@ -8,34 +8,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (r *Rest) Register(ctx *gin.Context) {
-	param := model.UserRegister{}
+func (r *Rest) RegisterAdmin(ctx *gin.Context) {
+	param := model.AdminRegister{}
 	err := ctx.ShouldBindJSON(&param)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "failed to bind input", err)
 		return
 	}
 
-	err = r.service.UserService.Register(param)
+	err = r.service.AdminService.RegisterAdmin(param)
 	if err != nil {
-		response.Error(ctx, http.StatusInternalServerError, "failed to register new user", err)
+		response.Error(ctx, http.StatusInternalServerError, "failed to register new admin", err)
 		return
 	}
 
-	response.Success(ctx, http.StatusCreated, "successfully register new user", nil)
+	response.Success(ctx, http.StatusCreated, "successfully register new admin", nil)
 }
 
-func (r *Rest) Login(ctx *gin.Context) {
-	param := model.UserLogin{}
+func (r *Rest) LoginAdmin(ctx *gin.Context) {
+	param := model.AdminLogin{}
 	err := ctx.ShouldBindJSON(&param)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "failed to bind input", err)
 		return
 	}
 
-	result, err := r.service.UserService.Login(param)
+	result, err := r.service.AdminService.Login(param)
 	if err != nil {
-		response.Error(ctx, http.StatusInternalServerError, "failed to login user", err)
+		response.Error(ctx, http.StatusInternalServerError, "failed to login admin", err)
 		return
 	}
 

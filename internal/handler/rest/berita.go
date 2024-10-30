@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"future-path/model"
 	"future-path/pkg/response"
 	"net/http"
@@ -29,7 +28,13 @@ func (r *Rest) CreateBerita(ctx *gin.Context) {
 }
 
 func (r *Rest) GetBeritaSingkat(ctx *gin.Context) {
-	berita, err := r.service.BeritaService.GetBeritaSingkat()
+	pageQuery := ctx.Query("page")
+	page, err := strconv.Atoi(pageQuery)
+	if err != nil {
+		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind request", err)
+	}
+
+	berita, err := r.service.BeritaService.GetBeritaSingkat(page)
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "Failed to get short news", err)
 		return
@@ -43,29 +48,78 @@ func (r *Rest) GetBeritaSingkat(ctx *gin.Context) {
 		})
 	}
 
-	response.Success(ctx, http.StatusOK, "Short new retrieved", beritaResponse)
+	response.Success(ctx, http.StatusOK, "Short news retrieved", beritaResponse)
 
 }
 
 func (r *Rest) GetBeritaFull(ctx *gin.Context) {
-	idParam := ctx.Param("id_berita")
+	idParam := ctx.Query("id_berita")
 
 	if idParam == "" {
-		response.Error(ctx, http.StatusBadRequest, "Invalid news ID", errors.New("ID cannot be empty"))
+		response.Error(ctx, http.StatusBadRequest, "News ID is required", nil)
+		return
 	}
 
-	id, err := strconv.ParseInt(idParam, 10, 32)
+	idInt, err := strconv.Atoi(idParam)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "Invalid news ID", err)
 		return
 	}
 
-	berita, err := r.service.BeritaService.GetBeritaFull(uint(id))
-
+	berita, err := r.service.BeritaService.GetBeritaFull(idInt)
 	if err != nil {
-		response.Error(ctx, http.StatusInternalServerError, "Failed to get full news", err)
+		response.Error(ctx, http.StatusBadRequest, "Failed to get news", err)
 		return
 	}
 
-	response.Success(ctx, http.StatusOK, "Full news retrieved", berita)
+	responses := model.GetBerita{
+		Judul_Berita: berita.Judul_Berita,
+		Isi_Berita:   berita.Isi_Berita,
+	}
+
+	response.Success(ctx, http.StatusOK, "Full news retrieved", responses)
+}
+
+func (r *Rest) UpdateBerita(ctx *gin.Context) {
+	idParam := ctx.Param("id_berita")
+	var beritaRequest model.UpdateBerita
+
+	if err := ctx.ShouldBindJSON(&beritaRequest); err != nil {
+		response.Error(ctx, http.StatusUnprocessableEntity, "Invalid request", err)
+	}
+
+	if idParam == "" {
+		response.Error(ctx, http.StatusBadRequest, "News ID is required", nil)
+		return
+	}
+
+	idInt, err := strconv.Atoi(idParam)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, "Invalid ID news", err)
+	}
+
+	berita, err := r.service.BeritaService.UpdateBerita(idInt, &beritaRequest)
+	if err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "Failed to update news", err)
+		return
+	}
+
+	response.Success(ctx, http.StatusOK, "News updated", berita)
+
+}
+
+func (r *Rest) DeleteBerita(ctx *gin.Context) {
+	idParam := ctx.Param("id_berita")
+	idInt, err := strconv.Atoi(idParam)
+	if err != nil {
+		response.Error(ctx, http.StatusBadRequest, "Invalid news ID", err)
+		return
+	}
+
+	if err := r.service.BeritaService.DeleteBerita(idInt); err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "Failed to delete news", err)
+	}
+
+	response.Success(ctx, http.StatusOK, "News deleted successfully", nil)
+
 }
