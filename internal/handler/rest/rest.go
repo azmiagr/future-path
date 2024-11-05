@@ -39,6 +39,10 @@ func (r *Rest) MountEndpoint() {
 	user.Use(r.middleware.AuthenticateUser)
 	user.GET("/berita", r.GetBeritaSingkat)
 	user.GET("/full-news", r.GetBeritaFull)
+	user.GET("/cari-sekolah/negeri", r.GetSekolahNegeri)
+	user.GET("/cari-sekolah/swasta", r.GetSekolahSwasta)
+	user.GET("cari-universitas/negeri", r.GetUnivNegeri)
+	user.GET("cari-universitas/swasta", r.GetUnivSwasta)
 
 	adminAuth := routerGroup.Group("/admin/auth")
 	adminAuth.POST("/register", r.RegisterAdmin)

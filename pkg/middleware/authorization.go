@@ -9,17 +9,30 @@ import (
 )
 
 func (m *middleware) OnlyAdmin(ctx *gin.Context) {
+	// user, err := m.jwtAuth.GetLoginUSer(ctx)
+	// if err != nil {
+	// 	response.Error(ctx, http.StatusForbidden, "failed get login user", err)
+	// 	ctx.Abort()
+	// 	return
+	// }
+
+	// if user.RoleID != 1 {
+	// 	response.Error(ctx, http.StatusForbidden, "this endpoint cannot be access", errors.New("user dont have access"))
+	// 	ctx.Abort()
+	// 	return
+	// }
+
 	admin, err := m.jwtAuth.GetLoginAdmin(ctx)
 	if err != nil {
-		response.Error(ctx, http.StatusForbidden, "failed get login admin", err)
-		return
-	}
-
-	if admin.ID_Admin != 1 {
-		response.Error(ctx, http.StatusForbidden, "this endpoint cannot be access", errors.New("user dont have access"))
+		response.Error(ctx, http.StatusInternalServerError, "failed to get login info", err)
 		ctx.Abort()
 		return
 	}
 
+	if admin.RoleID != 1 {
+		response.Error(ctx, http.StatusForbidden, "this endpoint cannot be access", errors.New("user dont have access"))
+		ctx.Abort()
+		return
+	}
 	ctx.Next()
 }
