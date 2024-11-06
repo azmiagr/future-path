@@ -12,6 +12,7 @@ type Interface interface {
 	AuthenticateUser(ctx *gin.Context)
 	AuthenticateAdmin(ctx *gin.Context)
 	OnlyAdmin(ctx *gin.Context)
+	Cors() gin.HandlerFunc
 }
 
 type middleware struct {

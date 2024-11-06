@@ -28,7 +28,7 @@ func NewRest(service *service.Service, middleware middleware.Interface) *Rest {
 
 func (r *Rest) MountEndpoint() {
 	routerGroup := r.router.Group("/future-path")
-	routerGroup.Use(r.middleware.Timeout())
+	routerGroup.Use(r.middleware.Timeout(), r.middleware.Cors())
 	routerGroup.GET("/testing", testTimeout)
 
 	auth := routerGroup.Group("/auth")
