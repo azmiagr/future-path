@@ -9,6 +9,8 @@ import (
 type IUniversitasRepository interface {
 	GetUnivNegeri(namaUniv string) ([]*entity.Universitas, error)
 	GetUnivSwasta(namaUniv string) ([]*entity.Universitas, error)
+	GetAllUniv(limit, offset int) ([]*entity.Universitas, error)
+	GetUnivDetail(id int) (*entity.Universitas, error)
 }
 
 type UniversitasRepository struct {
@@ -35,4 +37,20 @@ func (u *UniversitasRepository) GetUnivSwasta(namaUniv string) ([]*entity.Univer
 		return nil, err
 	}
 	return univ, nil
+}
+
+func (u *UniversitasRepository) GetAllUniv(limit, offset int) ([]*entity.Universitas, error) {
+	var univ []*entity.Universitas
+	if err := u.db.Debug().Limit(limit).Offset(offset).Find(&univ).Error; err != nil {
+		return nil, err
+	}
+	return univ, nil
+}
+
+func (u *UniversitasRepository) GetUnivDetail(id int) (*entity.Universitas, error) {
+	var univ entity.Universitas
+	if err := u.db.Debug().Where("id_universitas = ?", id).First(&univ).Error; err != nil {
+		return nil, err
+	}
+	return &univ, nil
 }

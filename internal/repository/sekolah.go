@@ -9,6 +9,8 @@ import (
 type ISekolahRepository interface {
 	GetSekolahNegeri(namaSekolah string) ([]*entity.Sekolah, error)
 	GetSekolahSwasta(namaSekolah string) ([]*entity.Sekolah, error)
+	GetAllSekolah(limit, offset int) ([]*entity.Sekolah, error)
+	GetSekolahDetail(id int) (*entity.Sekolah, error)
 }
 
 type SekolahRepository struct {
@@ -35,4 +37,20 @@ func (sk *SekolahRepository) GetSekolahSwasta(namaSekolah string) ([]*entity.Sek
 		return nil, err
 	}
 	return sekolah, nil
+}
+
+func (sk *SekolahRepository) GetAllSekolah(limit, offset int) ([]*entity.Sekolah, error) {
+	var sekolah []*entity.Sekolah
+	if err := sk.db.Debug().Limit(limit).Offset(offset).Find(&sekolah).Error; err != nil {
+		return nil, err
+	}
+	return sekolah, nil
+}
+
+func (sk *SekolahRepository) GetSekolahDetail(id int) (*entity.Sekolah, error) {
+	var sekolah entity.Sekolah
+	if err := sk.db.Debug().Where("id_sekolah = ?", id).First(&sekolah).Error; err != nil {
+		return nil, err
+	}
+	return &sekolah, nil
 }
