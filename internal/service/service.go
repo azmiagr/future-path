@@ -12,6 +12,7 @@ type Service struct {
 	AdminService       IAdminService
 	SekolahService     ISekolahService
 	UniversitasService IUniversitasService
+	FAQService         IFAQService
 }
 
 func NewService(repository *repository.Repository, bcrypt bcrypt.Interface, jwt jwt.Interface) *Service {
@@ -21,5 +22,6 @@ func NewService(repository *repository.Repository, bcrypt bcrypt.Interface, jwt 
 		AdminService:       NewAdminService(repository.AdminRepository, bcrypt, jwt),
 		SekolahService:     NewSekolahService(repository.SekolahRepository),
 		UniversitasService: NewUniversitasService(repository.UniversitasRepository),
+		FAQService:         NewFAQService(repository.FAQRepository),
 	}
 }

@@ -41,8 +41,9 @@ func (r *Rest) MountEndpoint() {
 	user.GET("/full-news", r.GetBeritaFull)
 	user.GET("/cari-sekolah/negeri", r.GetSekolahNegeri)
 	user.GET("/cari-sekolah/swasta", r.GetSekolahSwasta)
-	user.GET("cari-universitas/negeri", r.GetUnivNegeri)
-	user.GET("cari-universitas/swasta", r.GetUnivSwasta)
+	user.GET("/cari-universitas/negeri", r.GetUnivNegeri)
+	user.GET("/cari-universitas/swasta", r.GetUnivSwasta)
+	user.GET("/faq", r.GetFAQ)
 
 	adminAuth := routerGroup.Group("/admin/auth")
 	adminAuth.POST("/register", r.RegisterAdmin)
@@ -53,6 +54,9 @@ func (r *Rest) MountEndpoint() {
 	admin.POST("/create-berita", r.CreateBerita)
 	admin.PATCH("/update-berita/:id_berita", r.UpdateBerita)
 	admin.DELETE("/delete-berita/:id_berita", r.DeleteBerita)
+	admin.POST("/create-faq", r.CreateFAQ)
+	admin.PATCH("/update-faq/:id_faq", r.UpdateFAQ)
+	admin.DELETE("/delete-faq/:id_faq", r.DeleteFAQ)
 }
 
 func testTimeout(ctx *gin.Context) {

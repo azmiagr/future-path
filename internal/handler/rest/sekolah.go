@@ -21,7 +21,7 @@ func (r *Rest) GetSekolahNegeri(ctx *gin.Context) {
 		sekolahResponses = append(sekolahResponses, model.GetSekolah{
 			Nama_Sekolah:      b.Nama_Sekolah,
 			Alamat_Sekolah:    b.Alamat_Sekolah,
-			Deskripsi_Sekolah: b.Alamat_Sekolah,
+			Deskripsi_Sekolah: b.Deskripsi_Sekolah,
 		})
 	}
 
@@ -41,7 +41,7 @@ func (r *Rest) GetSekolahSwasta(ctx *gin.Context) {
 		sekolahResponses = append(sekolahResponses, model.GetSekolah{
 			Nama_Sekolah:      b.Nama_Sekolah,
 			Alamat_Sekolah:    b.Alamat_Sekolah,
-			Deskripsi_Sekolah: b.Alamat_Sekolah,
+			Deskripsi_Sekolah: b.Deskripsi_Sekolah,
 		})
 	}
 

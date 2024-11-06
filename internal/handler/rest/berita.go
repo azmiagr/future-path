@@ -32,6 +32,7 @@ func (r *Rest) GetBeritaSingkat(ctx *gin.Context) {
 	page, err := strconv.Atoi(pageQuery)
 	if err != nil {
 		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind request", err)
+		return
 	}
 
 	berita, err := r.service.BeritaService.GetBeritaSingkat(page)
