@@ -39,6 +39,11 @@ func (r *Rest) Login(ctx *gin.Context) {
 		return
 	}
 
-	response.Success(ctx, http.StatusOK, "successfully login to system", result)
+	responses := model.UserLoginResponses{
+		Token:  result.Token,
+		RoleID: result.RoleID,
+	}
+
+	response.Success(ctx, http.StatusOK, "successfully login to system", responses)
 
 }

@@ -16,7 +16,6 @@ type Interface interface {
 	CreateToken(userID int) (string, error)
 	ValidateToken(tokenString string) (int, error)
 	GetLoginUSer(ctx *gin.Context) (entity.User, error)
-	GetLoginAdmin(ctx *gin.Context) (entity.Admin, error)
 }
 
 type jsonWebToken struct {
@@ -89,13 +88,4 @@ func (j *jsonWebToken) GetLoginUSer(ctx *gin.Context) (entity.User, error) {
 	}
 
 	return user.(entity.User), nil
-}
-
-func (j *jsonWebToken) GetLoginAdmin(ctx *gin.Context) (entity.Admin, error) {
-	admin, ok := ctx.Get("admin")
-	if !ok {
-		return entity.Admin{}, errors.New("failed to get login admin")
-	}
-
-	return admin.(entity.Admin), nil
 }

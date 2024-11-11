@@ -74,6 +74,7 @@ func (us *UserService) Login(param model.UserLogin) (model.UserLoginResponses, e
 	}
 
 	result.Token = token
+	result.RoleID = user.RoleID
 
 	return result, nil
 }

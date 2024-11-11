@@ -10,7 +10,6 @@ import (
 type Interface interface {
 	Timeout() gin.HandlerFunc
 	AuthenticateUser(ctx *gin.Context)
-	AuthenticateAdmin(ctx *gin.Context)
 	OnlyAdmin(ctx *gin.Context)
 	Cors() gin.HandlerFunc
 }

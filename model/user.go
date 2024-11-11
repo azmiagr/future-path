@@ -12,11 +12,13 @@ type UserLogin struct {
 }
 
 type UserLoginResponses struct {
-	Token string `json:"token"`
+	Token  string `json:"token"`
+	RoleID int    `json:"role_id"`
 }
 
 type UserParam struct {
 	ID_User       int    `json:"-"`
 	Email_User    string `json:"-"`
 	Password_User string `json:"-"`
+	RoleID        int    `json:"-"`
 }

@@ -39,33 +39,3 @@ func (m *middleware) AuthenticateUser(ctx *gin.Context) {
 
 	ctx.Next()
 }
-
-func (m *middleware) AuthenticateAdmin(ctx *gin.Context) {
-	bearer := ctx.GetHeader("Authorization")
-	if bearer == "" {
-		response.Error(ctx, http.StatusUnauthorized, "empty token", errors.New(""))
-		ctx.Abort()
-		return
-	}
-
-	token := strings.Split(bearer, " ")[1]
-	adminID, err := m.jwtAuth.ValidateToken(token)
-	if err != nil {
-		response.Error(ctx, http.StatusUnauthorized, "failed to validate token", err)
-		ctx.Abort()
-		return
-	}
-
-	admin, err := m.service.AdminService.GetAdmin(model.AdminParam{
-		ID_Admin: adminID,
-	})
-	if err != nil {
-		response.Error(ctx, http.StatusUnauthorized, "failed to get admin", err)
-		ctx.Abort()
-		return
-	}
-
-	ctx.Set("admin", admin)
-
-	ctx.Next()
-}
