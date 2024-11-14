@@ -10,6 +10,7 @@ import (
 type IUserRepository interface {
 	CreateUser(user entity.User) (entity.User, error)
 	GetUser(param model.UserParam) (entity.User, error)
+	FindUserByEmail(email string) (*entity.User, error)
 }
 
 type UserRepository struct {
@@ -36,4 +37,13 @@ func (u *UserRepository) GetUser(param model.UserParam) (entity.User, error) {
 		return user, err
 	}
 	return user, nil
+}
+
+func (u *UserRepository) FindUserByEmail(email string) (*entity.User, error) {
+	var user entity.User
+	err := u.db.Debug().Where("email_user = ?", email).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

@@ -30,6 +30,11 @@ func NewUserService(userRepository repository.IUserRepository, bcrypt bcrypt.Int
 }
 
 func (us *UserService) Register(param model.UserRegister) error {
+	checkUser, err := us.UserRepository.FindUserByEmail(param.Email_User)
+	if err == nil && checkUser != nil {
+		return errors.New("email already registered")
+	}
+
 	hashPassword, err := us.bcrypt.GenerateFromPassword(param.Password_User)
 	if err != nil {
 		return err
