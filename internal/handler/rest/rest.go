@@ -27,9 +27,9 @@ func NewRest(service *service.Service, middleware middleware.Interface) *Rest {
 }
 
 func (r *Rest) MountEndpoint() {
-	r.router.Use(r.middleware.Timeout())
+	r.router.Use(r.middleware.Cors())
 	routerGroup := r.router.Group("/future-path")
-	routerGroup.Use(r.middleware.Cors())
+	routerGroup.Use(r.middleware.Timeout())
 	routerGroup.GET("/testing", testTimeout)
 
 	auth := routerGroup.Group("/auth")
@@ -58,6 +58,9 @@ func (r *Rest) MountEndpoint() {
 	admin.POST("/create-faq", r.CreateFAQ)
 	admin.PATCH("/update-faq/:id_faq", r.UpdateFAQ)
 	admin.DELETE("/delete-faq/:id_faq", r.DeleteFAQ)
+	admin.GET("/get-ownerships", r.GetKepemilikan)
+	admin.POST("/add-sekolah", r.AddSekolah)
+	admin.POST("add-universitas", r.AddUniv)
 }
 
 func testTimeout(ctx *gin.Context) {

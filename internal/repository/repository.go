@@ -8,6 +8,7 @@ type Repository struct {
 	SekolahRepository     ISekolahRepository
 	UniversitasRepository IUniversitasRepository
 	FAQRepository         IFAQRepository
+	KepemilikanRepository IKepemilikanRepository
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -17,5 +18,6 @@ func NewRepository(db *gorm.DB) *Repository {
 		SekolahRepository:     NewSekolahRepository(db),
 		UniversitasRepository: NewUniversitasRepository(db),
 		FAQRepository:         NewFAQRepository(db),
+		KepemilikanRepository: NewKepemilikanRepository(db),
 	}
 }

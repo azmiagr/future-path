@@ -99,3 +99,27 @@ func (r *Rest) GetUnivDetail(ctx *gin.Context) {
 
 	response.Success(ctx, http.StatusOK, "University retrieved", responses)
 }
+
+func (r *Rest) AddUniv(ctx *gin.Context) {
+	var univReq model.CreateUniv
+	err := ctx.ShouldBindJSON(&univReq)
+	if err != nil {
+		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind input", err)
+		return
+	}
+
+	univ, err := r.service.UniversitasService.AddUniv(&univReq)
+	if err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "Failed to add university", err)
+		return
+	}
+
+	responses := model.CreateUnivResponse{
+		Nama_Universitas:      univ.Nama_Universitas,
+		Alamat_Universitas:    univ.Alamat_Universitas,
+		Deskripsi_Universitas: univ.Deskripsi_Universitas,
+		ID_Kepemilikan:        univ.ID_Kepemilikan,
+	}
+
+	response.Success(ctx, http.StatusOK, "Successfully to add university", responses)
+}

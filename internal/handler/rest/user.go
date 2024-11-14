@@ -16,6 +16,10 @@ func (r *Rest) Register(ctx *gin.Context) {
 		return
 	}
 
+	if len(param.Password_User) < 8 {
+		response.Error(ctx, http.StatusBadRequest, "password less than 8 character", nil)
+	}
+
 	err = r.service.UserService.Register(param)
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "failed to register new user", err)

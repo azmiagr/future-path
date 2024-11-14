@@ -11,6 +11,7 @@ type IUniversitasRepository interface {
 	GetUnivSwasta(namaUniv string) ([]*entity.Universitas, error)
 	GetAllUniv(limit, offset int) ([]*entity.Universitas, error)
 	GetUnivDetail(id int) (*entity.Universitas, error)
+	AddUniv(univ *entity.Universitas) (*entity.Universitas, error)
 }
 
 type UniversitasRepository struct {
@@ -53,4 +54,12 @@ func (u *UniversitasRepository) GetUnivDetail(id int) (*entity.Universitas, erro
 		return nil, err
 	}
 	return &univ, nil
+}
+
+func (u *UniversitasRepository) AddUniv(univ *entity.Universitas) (*entity.Universitas, error) {
+	err := u.db.Debug().Create(&univ).Error
+	if err != nil {
+		return nil, err
+	}
+	return univ, nil
 }

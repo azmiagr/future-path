@@ -11,6 +11,7 @@ type ISekolahRepository interface {
 	GetSekolahSwasta(namaSekolah string) ([]*entity.Sekolah, error)
 	GetAllSekolah(limit, offset int) ([]*entity.Sekolah, error)
 	GetSekolahDetail(id int) (*entity.Sekolah, error)
+	AddSekolah(sekolah *entity.Sekolah) (*entity.Sekolah, error)
 }
 
 type SekolahRepository struct {
@@ -24,7 +25,7 @@ func NewSekolahRepository(db *gorm.DB) ISekolahRepository {
 func (sk *SekolahRepository) GetSekolahNegeri(namaSekolah string) ([]*entity.Sekolah, error) {
 	var sekolah []*entity.Sekolah
 	query := "%" + namaSekolah + "%"
-	if err := sk.db.Debug().Where("id_kepemilikan = ? AND nama_sekolah LIKE ?", 1, query).First(&sekolah).Error; err != nil {
+	if err := sk.db.Debug().Where("id_kepemilikan = ? AND nama_sekolah LIKE ?", 1, query).Find(&sekolah).Error; err != nil {
 		return nil, err
 	}
 	return sekolah, nil
@@ -53,4 +54,12 @@ func (sk *SekolahRepository) GetSekolahDetail(id int) (*entity.Sekolah, error) {
 		return nil, err
 	}
 	return &sekolah, nil
+}
+
+func (sk *SekolahRepository) AddSekolah(sekolah *entity.Sekolah) (*entity.Sekolah, error) {
+	err := sk.db.Debug().Create(&sekolah).Error
+	if err != nil {
+		return nil, err
+	}
+	return sekolah, nil
 }

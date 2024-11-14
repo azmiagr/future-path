@@ -1,8 +1,10 @@
 package service
 
 import (
+	"errors"
 	"future-path/entity"
 	"future-path/internal/repository"
+	"future-path/model"
 )
 
 type ISekolahService interface {
@@ -10,6 +12,7 @@ type ISekolahService interface {
 	GetSekolahSwasta(namaSekolah string) ([]*entity.Sekolah, error)
 	GetAllSekolah(page int) ([]*entity.Sekolah, error)
 	GetSekolahDetail(id int) (*entity.Sekolah, error)
+	AddSekolah(sekolahReq *model.CreateSekolah) (*entity.Sekolah, error)
 }
 
 type SekolahService struct {
@@ -49,6 +52,25 @@ func (ss *SekolahService) GetAllSekolah(page int) ([]*entity.Sekolah, error) {
 
 func (ss *SekolahService) GetSekolahDetail(id int) (*entity.Sekolah, error) {
 	sekolah, err := ss.SekolahRepository.GetSekolahDetail(id)
+	if err != nil {
+		return nil, err
+	}
+	return sekolah, nil
+}
+
+func (ss *SekolahService) AddSekolah(sekolahReq *model.CreateSekolah) (*entity.Sekolah, error) {
+	sekolah := &entity.Sekolah{
+		Nama_Sekolah:      sekolahReq.Nama_Sekolah,
+		Alamat_Sekolah:    sekolahReq.Alamat_Sekolah,
+		Deskripsi_Sekolah: sekolahReq.Deskripsi_Sekolah,
+		ID_Kepemilikan:    sekolahReq.ID_Kepemilikan,
+	}
+
+	if sekolah.ID_Kepemilikan != 1 && sekolah.ID_Kepemilikan != 2 {
+		return nil, errors.New("invalid ownerships id")
+	}
+
+	sekolah, err := ss.SekolahRepository.AddSekolah(sekolah)
 	if err != nil {
 		return nil, err
 	}

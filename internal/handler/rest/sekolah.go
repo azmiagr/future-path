@@ -102,3 +102,28 @@ func (r *Rest) GetSekolahDetail(ctx *gin.Context) {
 
 	response.Success(ctx, http.StatusOK, "School retrieved", responses)
 }
+
+func (r *Rest) AddSekolah(ctx *gin.Context) {
+	var sekolahReq model.CreateSekolah
+
+	err := ctx.ShouldBindJSON(&sekolahReq)
+	if err != nil {
+		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind input", err)
+		return
+	}
+
+	sekolah, err := r.service.SekolahService.AddSekolah(&sekolahReq)
+	if err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "Failed to add school", err)
+		return
+	}
+
+	responses := model.CreateSekolahResponse{
+		Nama_Sekolah:      sekolah.Nama_Sekolah,
+		Alamat_Sekolah:    sekolah.Alamat_Sekolah,
+		Deskripsi_Sekolah: sekolah.Deskripsi_Sekolah,
+		ID_Kepemilikan:    sekolah.ID_Kepemilikan,
+	}
+
+	response.Success(ctx, http.StatusOK, "Successfully to add school", responses)
+}

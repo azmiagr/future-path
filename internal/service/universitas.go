@@ -1,8 +1,10 @@
 package service
 
 import (
+	"errors"
 	"future-path/entity"
 	"future-path/internal/repository"
+	"future-path/model"
 )
 
 type IUniversitasService interface {
@@ -10,6 +12,7 @@ type IUniversitasService interface {
 	GetUnivSwasta(namaUniv string) ([]*entity.Universitas, error)
 	GetAllUniv(page int) ([]*entity.Universitas, error)
 	GetUnivDetail(id int) (*entity.Universitas, error)
+	AddUniv(univReq *model.CreateUniv) (*entity.Universitas, error)
 }
 
 type UniversitasService struct {
@@ -49,6 +52,25 @@ func (us *UniversitasService) GetAllUniv(page int) ([]*entity.Universitas, error
 
 func (us *UniversitasService) GetUnivDetail(id int) (*entity.Universitas, error) {
 	univ, err := us.UniversitasRepository.GetUnivDetail(id)
+	if err != nil {
+		return nil, err
+	}
+	return univ, nil
+}
+
+func (us *UniversitasService) AddUniv(univReq *model.CreateUniv) (*entity.Universitas, error) {
+	univ := &entity.Universitas{
+		Nama_Universitas:      univReq.Nama_Universitas,
+		Alamat_Universitas:    univReq.Alamat_Universitas,
+		Deskripsi_Universitas: univReq.Deskripsi_Universitas,
+		ID_Kepemilikan:        univReq.ID_Kepemilikan,
+	}
+
+	if univ.ID_Kepemilikan != 1 && univ.ID_Kepemilikan != 2 {
+		return nil, errors.New("invalid ownerships id")
+	}
+
+	univ, err := us.UniversitasRepository.AddUniv(univ)
 	if err != nil {
 		return nil, err
 	}
