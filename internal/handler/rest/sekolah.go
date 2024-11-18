@@ -57,21 +57,27 @@ func (r *Rest) GetAllSekolah(ctx *gin.Context) {
 		return
 	}
 
-	sekolah, err := r.service.SekolahService.GetAllSekolah(page)
+	sekolah, err, totalData := r.service.SekolahService.GetAllSekolah(page)
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "Failed to get short news", err)
 		return
 	}
 
-	var sekolahResponse []model.GetAllSekolah
+	responseData := struct {
+		TotalData int64                 `json:"total_data"`
+		Sekolah   []model.GetAllSekolah `json:"sekolah"`
+	}{
+		TotalData: totalData,
+	}
+
 	for _, b := range sekolah {
-		sekolahResponse = append(sekolahResponse, model.GetAllSekolah{
+		responseData.Sekolah = append(responseData.Sekolah, model.GetAllSekolah{
 			Nama_Sekolah:   b.Nama_Sekolah,
 			Alamat_Sekolah: b.Alamat_Sekolah,
 		})
 	}
 
-	response.Success(ctx, http.StatusOK, "Schools retrieved", sekolahResponse)
+	response.Success(ctx, http.StatusOK, "Schools retrieved", responseData)
 }
 
 func (r *Rest) GetSekolahDetail(ctx *gin.Context) {

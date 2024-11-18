@@ -12,6 +12,7 @@ type ISekolahRepository interface {
 	GetAllSekolah(limit, offset int) ([]*entity.Sekolah, error)
 	GetSekolahDetail(id int) (*entity.Sekolah, error)
 	AddSekolah(sekolah *entity.Sekolah) (*entity.Sekolah, error)
+	CountAllSekolah() (int64, error)
 }
 
 type SekolahRepository struct {
@@ -46,6 +47,15 @@ func (sk *SekolahRepository) GetAllSekolah(limit, offset int) ([]*entity.Sekolah
 		return nil, err
 	}
 	return sekolah, nil
+}
+
+func (sk *SekolahRepository) CountAllSekolah() (int64, error) {
+	var count int64
+	err := sk.db.Debug().Model(&entity.Sekolah{}).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func (sk *SekolahRepository) GetSekolahDetail(id int) (*entity.Sekolah, error) {

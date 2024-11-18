@@ -10,7 +10,7 @@ import (
 type ISekolahService interface {
 	GetSekolahNegeri(namaSekolah string) ([]*entity.Sekolah, error)
 	GetSekolahSwasta(namaSekolah string) ([]*entity.Sekolah, error)
-	GetAllSekolah(page int) ([]*entity.Sekolah, error)
+	GetAllSekolah(page int) ([]*entity.Sekolah, error, int64)
 	GetSekolahDetail(id int) (*entity.Sekolah, error)
 	AddSekolah(sekolahReq *model.CreateSekolah) (*entity.Sekolah, error)
 }
@@ -39,15 +39,17 @@ func (ss *SekolahService) GetSekolahSwasta(namaSekolah string) ([]*entity.Sekola
 	return sekolah, nil
 }
 
-func (ss *SekolahService) GetAllSekolah(page int) ([]*entity.Sekolah, error) {
+func (ss *SekolahService) GetAllSekolah(page int) ([]*entity.Sekolah, error, int64) {
 	limit := 10
 	offset := (page - 1) * limit
 	sekolah, err := ss.SekolahRepository.GetAllSekolah(limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, err, 0
 	}
 
-	return sekolah, nil
+	totalData, err := ss.SekolahRepository.CountAllSekolah()
+
+	return sekolah, nil, totalData
 }
 
 func (ss *SekolahService) GetSekolahDetail(id int) (*entity.Sekolah, error) {
