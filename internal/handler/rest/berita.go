@@ -35,21 +35,27 @@ func (r *Rest) GetBeritaSingkat(ctx *gin.Context) {
 		return
 	}
 
-	berita, err := r.service.BeritaService.GetBeritaSingkat(page)
+	berita, err, totalData := r.service.BeritaService.GetBeritaSingkat(page)
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "Failed to get short news", err)
 		return
 	}
 
-	var beritaResponse []model.GetBerita
+	responseData := struct {
+		TotalData int64             `json:"total_data"`
+		Berita    []model.GetBerita `json:"berita"`
+	}{
+		TotalData: totalData,
+	}
+
 	for _, b := range berita {
-		beritaResponse = append(beritaResponse, model.GetBerita{
+		responseData.Berita = append(responseData.Berita, model.GetBerita{
 			Judul_Berita: b.Judul_Berita,
 			Isi_Berita:   b.Isi_Berita,
 		})
 	}
 
-	response.Success(ctx, http.StatusOK, "Short news retrieved", beritaResponse)
+	response.Success(ctx, http.StatusOK, "Short news retrieved", responseData)
 
 }
 

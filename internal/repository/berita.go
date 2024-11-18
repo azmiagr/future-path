@@ -13,6 +13,7 @@ type IBeritaRepository interface {
 	GetBeritaFull(id int) (*entity.Berita, error)
 	UpdateBerita(id int, beritaRequest *model.UpdateBerita) (*entity.Berita, error)
 	DeleteBerita(id int) error
+	CountAllBerita() (int64, error)
 }
 
 type BeritaRepository struct {
@@ -38,6 +39,15 @@ func (br *BeritaRepository) GetBeritaSingkat(limit, offset int) ([]*entity.Berit
 		return nil, err
 	}
 	return berita, nil
+}
+
+func (br *BeritaRepository) CountAllBerita() (int64, error) {
+	var count int64
+	err := br.db.Debug().Model(&entity.Berita{}).Count(&count).Error
+	if err != nil {
+		return 0, nil
+	}
+	return count, nil
 }
 
 func (br *BeritaRepository) GetBeritaFull(id int) (*entity.Berita, error) {

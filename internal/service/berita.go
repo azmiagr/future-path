@@ -9,7 +9,7 @@ import (
 
 type IBeritaService interface {
 	CreateBerita(beritaReq *model.CreateBerita) (*entity.Berita, error)
-	GetBeritaSingkat(page int) ([]*entity.Berita, error)
+	GetBeritaSingkat(page int) ([]*entity.Berita, error, int64)
 	GetBeritaFull(id int) (*entity.Berita, error)
 	UpdateBerita(id int, beritaRequest *model.UpdateBerita) (*entity.Berita, error)
 	DeleteBerita(id int) error
@@ -36,16 +36,21 @@ func (bs *BeritaService) CreateBerita(beritaReq *model.CreateBerita) (*entity.Be
 	return berita, nil
 }
 
-func (bs *BeritaService) GetBeritaSingkat(page int) ([]*entity.Berita, error) {
+func (bs *BeritaService) GetBeritaSingkat(page int) ([]*entity.Berita, error, int64) {
 	limit := 4
 	offset := (page - 1) * limit
 
 	berita, err := bs.BeritaRepository.GetBeritaSingkat(limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, err, 0
 	}
 
-	return berita, nil
+	totalData, err := bs.BeritaRepository.CountAllBerita()
+	if err != nil {
+		return nil, err, 0
+	}
+
+	return berita, nil, totalData
 }
 
 func (bs *BeritaService) GetBeritaFull(id int) (*entity.Berita, error) {
