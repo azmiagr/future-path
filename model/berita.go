@@ -6,6 +6,7 @@ type CreateBerita struct {
 }
 
 type GetBerita struct {
+	ID_Berita    int    `json:"id_berita"`
 	Judul_Berita string `json:"judul_berita"`
 	Isi_Berita   string `json:"isi_berita"`
 }

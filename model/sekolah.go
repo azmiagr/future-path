@@ -7,6 +7,7 @@ type GetSekolah struct {
 }
 
 type GetAllSekolah struct {
+	ID_Sekolah     int    `json:"id_sekolah"`
 	Nama_Sekolah   string `json:"nama_sekolah"`
 	Alamat_Sekolah string `json:"alamat_sekolah"`
 }

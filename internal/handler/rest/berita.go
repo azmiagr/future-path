@@ -50,6 +50,7 @@ func (r *Rest) GetBeritaSingkat(ctx *gin.Context) {
 
 	for _, b := range berita {
 		responseData.Berita = append(responseData.Berita, model.GetBerita{
+			ID_Berita:    b.ID_Berita,
 			Judul_Berita: b.Judul_Berita,
 			Isi_Berita:   b.Isi_Berita,
 		})
@@ -80,6 +81,7 @@ func (r *Rest) GetBeritaFull(ctx *gin.Context) {
 	}
 
 	responses := model.GetBerita{
+		ID_Berita:    berita.ID_Berita,
 		Judul_Berita: berita.Judul_Berita,
 		Isi_Berita:   berita.Isi_Berita,
 	}

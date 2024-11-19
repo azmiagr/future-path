@@ -72,6 +72,7 @@ func (r *Rest) GetAllSekolah(ctx *gin.Context) {
 
 	for _, b := range sekolah {
 		responseData.Sekolah = append(responseData.Sekolah, model.GetAllSekolah{
+			ID_Sekolah:     b.ID_Sekolah,
 			Nama_Sekolah:   b.Nama_Sekolah,
 			Alamat_Sekolah: b.Alamat_Sekolah,
 		})
