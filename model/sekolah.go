@@ -1,6 +1,7 @@
 package model
 
 type GetSekolah struct {
+	ID_Sekolah        int    `json:"id_sekolah"`
 	Nama_Sekolah      string `json:"nama_sekolah"`
 	Alamat_Sekolah    string `json:"alamat_sekolah"`
 	Deskripsi_Sekolah string `json:"deskripsi_sekolah"`
