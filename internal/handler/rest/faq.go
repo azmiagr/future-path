@@ -27,14 +27,7 @@ func (r *Rest) CreateFAQ(ctx *gin.Context) {
 }
 
 func (r *Rest) GetFAQ(ctx *gin.Context) {
-	pageQuery := ctx.Query("page")
-	page, err := strconv.Atoi(pageQuery)
-	if err != nil {
-		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind request", err)
-		return
-	}
-
-	faq, err := r.service.FAQService.GetFAQ(page)
+	faq, err := r.service.FAQService.GetFAQ()
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "Failed to get FAQ", err)
 		return
@@ -43,6 +36,7 @@ func (r *Rest) GetFAQ(ctx *gin.Context) {
 	var FAQResponse []model.GetFAQ
 	for _, b := range faq {
 		FAQResponse = append(FAQResponse, model.GetFAQ{
+			ID_FAQ:    b.ID_FAQ,
 			Judul_FAQ: b.Judul_FAQ,
 			Isi_FAQ:   b.Isi_FAQ,
 		})

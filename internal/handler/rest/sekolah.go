@@ -113,15 +113,22 @@ func (r *Rest) GetSekolahDetail(ctx *gin.Context) {
 }
 
 func (r *Rest) AddSekolah(ctx *gin.Context) {
-	var sekolahReq model.CreateSekolah
-
-	err := ctx.ShouldBindJSON(&sekolahReq)
+	photoReq, err := ctx.FormFile("photo")
 	if err != nil {
-		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind input", err)
-		return
+		response.Error(ctx, http.StatusUnprocessableEntity, "failed to bind input", err)
 	}
 
-	sekolah, err := r.service.SekolahService.AddSekolah(&sekolahReq)
+	sekolahReq := model.CreateSekolah{
+		Nama_Sekolah:      ctx.PostForm("nama_sekolah"),
+		Alamat_Sekolah:    ctx.PostForm("alamat_sekolah"),
+		Deskripsi_Sekolah: ctx.PostForm("deskripsi_sekolah"),
+	}
+
+	photo := model.UploadPhoto{
+		Photo: photoReq,
+	}
+
+	sekolah, err := r.service.SekolahService.AddSekolah(&sekolahReq, photo)
 	if err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "Failed to add school", err)
 		return
@@ -136,3 +143,38 @@ func (r *Rest) AddSekolah(ctx *gin.Context) {
 
 	response.Success(ctx, http.StatusOK, "Successfully to add school", responses)
 }
+
+// func (r *Rest) AddSekolah(ctx *gin.Context) {
+// 	var sekolahReq model.CreateSekolah
+
+// 	err := ctx.ShouldBind(&sekolahReq)
+// 	if err != nil {
+// 		response.Error(ctx, http.StatusUnprocessableEntity, "Failed to bind input", err)
+// 		return
+// 	}
+
+// 	photoReq, err := ctx.FormFile("photo")
+// 	if err != nil {
+// 		response.Error(ctx, http.StatusUnprocessableEntity, "failed to bind input", err)
+// 	}
+
+// 	photo := model.UploadPhoto{
+// 		Photo: photoReq,
+// 	}
+
+// 	sekolah, err := r.service.SekolahService.AddSekolah(&sekolahReq, photo)
+// 	if err != nil {
+// 		response.Error(ctx, http.StatusInternalServerError, "Failed to add school", err)
+// 		return
+// 	}
+
+// 	responses := model.CreateSekolahResponse{
+// 		Nama_Sekolah:      sekolah.Nama_Sekolah,
+// 		Alamat_Sekolah:    sekolah.Alamat_Sekolah,
+// 		Deskripsi_Sekolah: sekolah.Deskripsi_Sekolah,
+// 		ID_Kepemilikan:    sekolah.ID_Kepemilikan,
+// 		PhotoLink:         sekolah.PhotoLink,
+// 	}
+
+// 	response.Success(ctx, http.StatusOK, "Successfully to add school", responses)
+// }

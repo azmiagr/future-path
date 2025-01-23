@@ -73,3 +73,11 @@ func (sk *SekolahRepository) AddSekolah(sekolah *entity.Sekolah) (*entity.Sekola
 	}
 	return sekolah, nil
 }
+
+func (sk *SekolahRepository) UploadPhoto(photoLink string, id int) error {
+	err := sk.db.Debug().Model(&entity.Sekolah{}).Where("id_sekolah = ?", id).Update("photoLink", photoLink).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

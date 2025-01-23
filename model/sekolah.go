@@ -1,5 +1,7 @@
 package model
 
+import "mime/multipart"
+
 type GetSekolah struct {
 	ID_Sekolah        int    `json:"id_sekolah"`
 	Nama_Sekolah      string `json:"nama_sekolah"`
@@ -25,4 +27,9 @@ type CreateSekolahResponse struct {
 	Alamat_Sekolah    string `json:"alamat_sekolah"`
 	Deskripsi_Sekolah string `json:"deskripsi_sekolah"`
 	ID_Kepemilikan    int    `json:"id_kepemilikan"`
+	PhotoLink         string `json:"photoLink"`
+}
+
+type UploadPhoto struct {
+	Photo *multipart.FileHeader `form:"photo"`
 }

@@ -6,6 +6,7 @@ type CreateFAQ struct {
 }
 
 type GetFAQ struct {
+	ID_FAQ    int    `json:"id_faq"`
 	Judul_FAQ string `json:"judul_faq"`
 	Isi_FAQ   string `json:"isi_faq"`
 }

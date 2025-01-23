@@ -9,11 +9,16 @@ import (
 	"future-path/pkg/database/mariadb"
 	"future-path/pkg/jwt"
 	"future-path/pkg/middleware"
+	"future-path/pkg/supabase"
 	"log"
+
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/providers/google"
 )
 
 func main() {
 	config.LoadEnvironment()
+	oauthConfig := config.AuthConfig()
 	db, err := mariadb.ConnectDatabase()
 
 	if err != nil {
@@ -24,10 +29,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	goth.UseProviders(
+		google.New(oauthConfig.GoogleClientID, oauthConfig.GoogleClientSecret, oauthConfig.OAuthCallbackURL),
+	)
+
 	repo := repository.NewRepository(db)
 	bcrypt := bcrypt.Init()
 	jwt := jwt.Init()
-	svc := service.NewService(repo, bcrypt, jwt)
+	supabase, err := supabase.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+	svc := service.NewService(repo, bcrypt, jwt, supabase)
 	middleware := middleware.Init(svc, jwt)
 
 	r := rest.NewRest(svc, middleware)

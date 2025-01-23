@@ -11,6 +11,7 @@ type IUserRepository interface {
 	CreateUser(user entity.User) (entity.User, error)
 	GetUser(param model.UserParam) (entity.User, error)
 	FindUserByEmail(email string) (*entity.User, error)
+	CreateOrUpdateUser(user *entity.User) error
 }
 
 type UserRepository struct {
@@ -46,4 +47,12 @@ func (u *UserRepository) FindUserByEmail(email string) (*entity.User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (u *UserRepository) CreateOrUpdateUser(user *entity.User) error {
+	err := u.db.Debug().Save(user).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

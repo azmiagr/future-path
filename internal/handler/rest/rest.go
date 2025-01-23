@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"future-path/internal/service"
 	"future-path/pkg/middleware"
-	"future-path/pkg/response"
-	"net/http"
 	"os"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,14 +24,17 @@ func NewRest(service *service.Service, middleware middleware.Interface) *Rest {
 }
 
 func (r *Rest) MountEndpoint() {
-	r.router.Use(r.middleware.Cors())
+	r.router.Use(r.middleware.Cors(), r.middleware.Timeout(), middleware.SessionMiddleware())
 	routerGroup := r.router.Group("/future-path")
-	routerGroup.Use(r.middleware.Timeout())
-	routerGroup.GET("/testing", testTimeout)
+	// routerGroup.Use(r.middleware.Timeout())
+	// routerGroup.GET("/testing", testTimeout)
 
 	auth := routerGroup.Group("/auth")
 	auth.POST("/register", r.Register)
 	auth.POST("/login", r.Login)
+
+	auth.GET("/login/:provider", r.OAuthLogin)
+	auth.GET("/callback/:provider/", r.OAuthCallback)
 
 	user := routerGroup.Group("/user")
 	user.Use(r.middleware.AuthenticateUser)
@@ -63,11 +63,11 @@ func (r *Rest) MountEndpoint() {
 	admin.POST("add-universitas", r.AddUniv)
 }
 
-func testTimeout(ctx *gin.Context) {
-	time.Sleep(3 * time.Second)
+// func testTimeout(ctx *gin.Context) {
+// 	time.Sleep(3 * time.Second)
 
-	response.Success(ctx, http.StatusOK, "success", nil)
-}
+// 	response.Success(ctx, http.StatusOK, "success", nil)
+// }
 
 func (r *Rest) Run() {
 	addr := os.Getenv("ADDRESS")

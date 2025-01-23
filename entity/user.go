@@ -7,4 +7,7 @@ type User struct {
 	Password_User string `json:"password_user" gorm:"type:varchar(100);not null"`
 	Asal_Sekolah  string `json:"asal_sekolah" gorm:"type:varchar(30)"`
 	RoleID        int    `json:"role_id"`
+	Token         string `json:"token" gorm:"type:text"`
 }
+
+// esTeh123

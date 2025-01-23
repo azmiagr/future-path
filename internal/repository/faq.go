@@ -9,7 +9,7 @@ import (
 
 type IFAQRepository interface {
 	CreateFAQ(faq *entity.FAQ) (*entity.FAQ, error)
-	GetFAQ(limit, offset int) ([]*entity.FAQ, error)
+	GetFAQ() ([]*entity.FAQ, error)
 	UpdateFAQ(id int, FAQRequest *model.UpdateFAQ) (*entity.FAQ, error)
 	DeleteFAQ(id int) error
 }
@@ -30,10 +30,10 @@ func (fr *FAQRepository) CreateFAQ(faq *entity.FAQ) (*entity.FAQ, error) {
 	return faq, nil
 }
 
-func (fr *FAQRepository) GetFAQ(limit, offset int) ([]*entity.FAQ, error) {
+func (fr *FAQRepository) GetFAQ() ([]*entity.FAQ, error) {
 	var faq []*entity.FAQ
 
-	if err := fr.db.Debug().Select("judul_faq, isi_faq").Limit(limit).Offset(offset).Find(&faq).Error; err != nil {
+	if err := fr.db.Debug().Find(&faq).Error; err != nil {
 		return nil, err
 	}
 

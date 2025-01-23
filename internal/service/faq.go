@@ -9,7 +9,7 @@ import (
 
 type IFAQService interface {
 	CreateFAQ(FAQReq *model.CreateFAQ) (*entity.FAQ, error)
-	GetFAQ(page int) ([]*entity.FAQ, error)
+	GetFAQ() ([]*entity.FAQ, error)
 	UpdateFAQ(id int, faqRequest *model.UpdateFAQ) (*entity.FAQ, error)
 	DeleteFAQ(id int) error
 }
@@ -35,11 +35,8 @@ func (fs *FAQService) CreateFAQ(FAQReq *model.CreateFAQ) (*entity.FAQ, error) {
 	return faq, nil
 }
 
-func (fs *FAQService) GetFAQ(page int) ([]*entity.FAQ, error) {
-	limit := 5
-	offset := (page - 1) * limit
-
-	faq, err := fs.FAQRepository.GetFAQ(limit, offset)
+func (fs *FAQService) GetFAQ() ([]*entity.FAQ, error) {
+	faq, err := fs.FAQRepository.GetFAQ()
 	if err != nil {
 		return nil, err
 	}
